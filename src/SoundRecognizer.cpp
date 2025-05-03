@@ -19,6 +19,7 @@ SoundRecognizer::SoundRecognizer()
     }
 
     listener = thread(&SoundRecognizer::listen_thread, this);
+    listener.detach();
 }
 
 SoundRecognizer::~SoundRecognizer()
@@ -46,19 +47,20 @@ string SoundRecognizer::receive_command()
 
 void SoundRecognizer::listen_thread()
 {
-    char buffer[128];
-    while(isRunning)
+    isRunning = true;
+    while (isRunning)
     {
+        char buffer[128];
         int len = recv(sockFd, buffer, sizeof(buffer) - 1, 0);
-        if( len <= 0) 
+        if (len <= 0)
         {
             break;
         }
-
         buffer[len] = '\0';
         string cmd(buffer);
         cmd.erase(cmd.find_last_not_of(" \n\r\t") + 1);
-        if(!cmd.empty())
+        cout << cmd << "\n";
+        if (!cmd.empty())
         {
             lock_guard<mutex> lock(queueMutex);
             commandQueue.push(cmd);

@@ -12,13 +12,21 @@ Robot::Robot()
     while (getline(file, line))
     {
         vector<char> row(line.begin(), line.end());
-        map.push_back(row);
+        airportMap.push_back(row);
     }
+
+    codes.insert({ "restaurant", 'R' });
+    codes.insert({ "gate", 'G' });
+    codes.insert({ "restroom", 'W' });
+    codes.insert({ "toilet", 'W' });
+    codes.insert({ "check", 'C' });
+    codes.insert({ "security", 'S' });
+    codes.insert({ "shops", 'D' });
 }
 
 void Robot::print_map()
 {
-    for (auto line : map)
+    for (auto line : airportMap)
     {
         for (auto cell : line)
         {
@@ -30,11 +38,20 @@ void Robot::print_map()
 
 void Robot::connect_to_server()
 {
-    while (true) {
+    isRunning = true;
+    while (isRunning)
+    {
         string command = recognizer.receive_command();
-        cout << command << "\n";
+        if (codes.find(command) != codes.end())
+        {
+            cout << codes[command]<<"\n";
+        }
         sleep(1);
     }
+}
 
+Robot::~Robot()
+{
+    isRunning = false;
 }
 
