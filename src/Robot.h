@@ -21,10 +21,12 @@ private:
     int startY;
     map<string, char> codes;
     SoundRecognizer recognizer;
+    Movement movement;
     vector<vector<char>> airportMap;
     bool isRunning;
     vector<int> GetPath(char target);
     bool isPositionValid(int x, int y, int rows, int columns);
+    void MoveRobot(int instruction);
 public:
     Robot();
     ~Robot();

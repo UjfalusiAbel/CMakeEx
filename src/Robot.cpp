@@ -77,6 +77,7 @@ void Robot::connect_to_server()
                 for (auto x : pathToTarget)
                 {
                     cout << x << " ";
+                    MoveRobot(x);
                 }
                 cout << "\n";
             }
@@ -90,6 +91,7 @@ vector<int> Robot::GetPath(char target)
     //0 - forward
     //1 - turn right
     //2 - turn left
+    //3 - stop
     const int rows = airportMap.size();
     const int columns = airportMap[0].size();
 
@@ -143,6 +145,7 @@ vector<int> Robot::GetPath(char target)
             }
             startX = targetX;
             startY = targetY;
+            currentState.path.push_back(3);
             return currentState.path;
         }
 
@@ -179,6 +182,25 @@ vector<int> Robot::GetPath(char target)
     }
 
     return {};
+}
+
+void Robot::MoveRobot(int instruction)
+{
+    switch (instruction)
+    {
+    case 0:
+        movement.move_forward();
+        break;
+    case 1:
+        movement.turn_right(90);
+        break;
+    case 2:
+        movement.turn_left(90);
+        break;
+    case 3:
+        movement.stop();
+        break;
+    }
 }
 
 bool Robot::isPositionValid(int x, int y, int rows, int columns)
